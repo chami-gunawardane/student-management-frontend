@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axiosInstanse from '../api/axios'; // Ensure the import path matches your project's structure
-
+import axiosInstanse from '../api/axios'; 
 const EditStudent = () => {
   const [student, setStudent] = useState({
     id: "",
@@ -13,7 +12,7 @@ const EditStudent = () => {
     tel: "",
   });
   
-  const { id } = useParams(); // Get the student id from the URL
+  const { id } = useParams(); 
   const navigate = useNavigate();
 
   useEffect(() => {

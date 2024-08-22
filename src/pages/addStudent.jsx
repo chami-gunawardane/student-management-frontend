@@ -30,10 +30,8 @@ const NewStudentForm = () => {
         tel: student.tel,
       });
 
-      // Display success message in alert box
       alert("Student data saved successfully!");
 
-      // Clear the form fields
       setStudent({
         firstName: "",
         middleName: "",
@@ -43,11 +41,9 @@ const NewStudentForm = () => {
         tel: "",
       });
 
-      // Optionally navigate to another page
       navigate('/');
 
     } catch (error) {
-      // Display error message in alert box
       alert("There was an error submitting the student data.");
       
       console.error('There was an error!', error); 
@@ -55,7 +51,6 @@ const NewStudentForm = () => {
   };
 
   const handleCancel = () => {
-    // Navigate back to the studentTable page
     navigate('/studentTable');
   };
 

@@ -4,6 +4,8 @@ import axiosInstance from "../api/axios";
 
 function StudentTable() {
   const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
@@ -15,6 +17,7 @@ function StudentTable() {
           "/student-management-service/students"
         );
         setStudents(response.data);
+        setFilteredStudents(response.data);
       } catch (error) {
         console.error("There was an error fetching the students!", error);
       }
@@ -22,6 +25,19 @@ function StudentTable() {
 
     fetchStudents();
   }, []);
+
+  useEffect(() => {
+    const results = students.filter(
+      (student) =>
+        student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.nic.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.age.toString().includes(searchTerm) ||
+        student.tel.toString().includes(searchTerm) ||
+        student.id.toString().includes(searchTerm)
+    );
+    setFilteredStudents(results);
+  }, [searchTerm, students]);
 
   const openDeleteModal = (id) => {
     setStudentToDelete(id);
@@ -49,9 +65,21 @@ function StudentTable() {
     <>
       <div className="mt-[5px] text-[50px]">Student Management System</div>
 
-      <button className="mt-[10px] mb-[20px] ml-[1100px] border px-4 py-2 border-neutral-500 hover:bg-neutral-300">
-        <Link to="/addStudent"> Add Student </Link>
-      </button>
+      <div className="flex justify-center items-center ml-[200px] mt-[10px] mb-[20px] pl-[100px] pr-[100px] w-[1100px]">
+        <input
+          type="text"
+          placeholder="Search students..."
+          className="border rounded px-4 py-2 w-full mr-4"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <div>
+      <button className="border px-4 py--1  w-[150px] h-[47px] ml-[1160px] bg-blue-500 hover:bg-blue-600 text-white rounded">
+          <Link to="/addStudent">Add Student</Link>
+        </button>
+      </div>
 
       <div className="flex flex-col">
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 w-full pl-[100px]">
@@ -60,16 +88,28 @@ function StudentTable() {
               <table className="min-w-full text-left text-sm font-light">
                 <thead className="border-b font-medium dark:border-neutral-500">
                   <tr>
-                    <th scope="col" className="px-6 py-4">ID</th>
-                    <th scope="col" className="px-6 py-4">NAME</th>
-                    <th scope="col" className="px-6 py-4">AGE</th>
-                    <th scope="col" className="px-6 py-4">NIC</th>
-                    <th scope="col" className="px-6 py-4">PHONE</th>
-                    <th scope="col" className="px-6 py-4">ACTION</th>
+                    <th scope="col" className="px-6 py-4">
+                      ID
+                    </th>
+                    <th scope="col" className="px-6 py-4">
+                      NAME
+                    </th>
+                    <th scope="col" className="px-6 py-4">
+                      AGE
+                    </th>
+                    <th scope="col" className="px-6 py-4">
+                      NIC
+                    </th>
+                    <th scope="col" className="px-6 py-4">
+                      PHONE
+                    </th>
+                    <th scope="col" className="px-6 py-4">
+                      ACTION
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((student) => (
+                  {filteredStudents.map((student) => (
                     <tr
                       key={student.id}
                       className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-300"
@@ -92,7 +132,7 @@ function StudentTable() {
                         {student.tel}
                       </td>
                       <td>
-                        <button className="px-6 py-4 mt-[12px] mr-[10px] pt-[2px] pb-[2px] bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ">
+                        <button className="px-6 py-4 mt-[12px] mr-[10px] pt-[2px] pb-[2px] bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ">
                           <Link to={`/editStudent/${student.id}`}>EDIT</Link>
                         </button>
                         <button

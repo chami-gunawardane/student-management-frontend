@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axiosInstanse from '../api/axios'; 
+import axiosInstanse from '../api/axios';
 
 const NewStudentForm = () => {
   const [student, setStudent] = useState({
@@ -11,6 +11,8 @@ const NewStudentForm = () => {
     nic: "",
     tel: "",
   });
+
+  const [showSuccess, setShowSuccess] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -25,12 +27,12 @@ const NewStudentForm = () => {
         firstName: student.firstName,
         middleName: student.middleName,
         lastName: student.lastName,
-        age: parseInt(student.age, 10), 
+        age: parseInt(student.age, 10),
         nic: student.nic,
         tel: student.tel,
       });
 
-      alert("Student data saved successfully!");
+      setShowSuccess(true); 
 
       setStudent({
         firstName: "",
@@ -41,21 +43,27 @@ const NewStudentForm = () => {
         tel: "",
       });
 
-      navigate('/');
+      setTimeout(() => {
+        navigate('/'); 
+      }, 1000);
 
     } catch (error) {
       alert("There was an error submitting the student data.");
-      
-      console.error('There was an error!', error); 
+      console.error('There was an error!', error);
     }
   };
 
   const handleCancel = () => {
-    navigate('/studentTable');
+    navigate('/');
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
+      {showSuccess && (
+        <div className="absolute top-10  bg-[#0ea5e9] text-white py-2 px-4 rounded shadow-lg">
+          Successfully added student! Redirecting...
+        </div>
+      )}
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
         <h2 className="text-2xl font-semibold mb-6 text-gray-700 text-center">
           Add New Student
@@ -143,10 +151,9 @@ const NewStudentForm = () => {
             <button
               type="button"
               className="w-1/2 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 ml-2"
+              onClick={handleCancel}
             >
-              <Link to='/'>
               Cancel
-              </Link>
             </button>
           </div>
         </form>

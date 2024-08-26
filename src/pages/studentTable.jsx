@@ -6,9 +6,9 @@ function StudentTable() {
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -55,7 +55,12 @@ function StudentTable() {
         `/student-management-service/students/${studentToDelete}`
       );
       setStudents(students.filter((student) => student.id !== studentToDelete));
+      setShowSuccess(true);
       closeDeleteModal();
+
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
     } catch (error) {
       console.error("There was an error deleting the student!", error);
     }
@@ -69,17 +74,23 @@ function StudentTable() {
         <input
           type="text"
           placeholder="Search students..."
-          className="border rounded px-4 py-2 w-full mr-4"
+          className="border-2 border-blue-500 rounded px-4 py-2 w-full mr-4"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       <div>
-      <button className="border px-4 py--1  w-[150px] h-[47px] ml-[1160px] bg-blue-500 hover:bg-blue-600 text-white rounded">
+        <button className="border px-4 py--1  w-[150px] h-[47px] ml-[1160px] bg-blue-500 hover:bg-blue-600 text-white rounded">
           <Link to="/addStudent">Add Student</Link>
         </button>
       </div>
+
+      {showSuccess && (
+        <div className="fixed top-[150px] left-1/2 transform -translate-x-1/2 bg-[#0ea5e9] text-white py-2 px-4 rounded shadow-lg z-50">
+          Student deleted successfully!
+        </div>
+      )}
 
       <div className="flex flex-col">
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 w-full pl-[100px]">
